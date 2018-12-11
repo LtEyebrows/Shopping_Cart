@@ -69,6 +69,21 @@ function addItem(id) {
   sleep(50).then(() => showCart());
 }
 
+function removeItem(id) {
+  // console.log(id);
+
+  //loop through cart and check id passed in against each elements
+  for (let index in cart) {
+    if (id === cart[index].id) {
+      //remove item using splice method
+      cart.splice(index, 1);  //start, remove, add
+      break;
+    }
+  }
+
+  showCart();
+}
+
 
 
 //write the functionality to show the cart
@@ -93,7 +108,7 @@ function showCart() {
         <td>${cart[index].title}</td>
         <td>$${cart[index].price}</td>
         <td>
-          <button class = "btn btn-danger" onClick="">X</button>
+          <button class = "btn btn-danger" onClick="removeItem(${cart[index].id})">X</button>
         </td>
       </tr>
     `;
@@ -101,6 +116,9 @@ function showCart() {
 
   //insert html variable into tbody
   $('#items').html(html);
+
+  //call showTotal() to update cart and navbar
+  showTotal()
 }
 
 
@@ -111,4 +129,22 @@ showCart();
 //add sleep function to stop asynchronous problems
 function sleep(time) {
   return new Promise(resolve => setTimeout(resolve, time));
+}
+
+
+//calculate total from cart and display in necessary places
+function showTotal() {
+  let total = 0;
+  for (let index in cart) {
+    total += cart[index].price;
+  }
+
+  //fix total number to two decimals
+  total = total.toFixed(2);
+
+  // console.log(total);
+
+  //insert total using jQuery
+  $('#cart_total').text(`$${total}`);
+  $('#nav-total').text(`Total: $${total}`); 
 }
